@@ -11,6 +11,9 @@ import src.Row;
 public class TreeGenerator /* implements ITreeGenerator<Dataset> */ {
     // TODO: document this field
     private ITreeNode root;
-    
+
     // TODO: Implement methods declared in ITreeGenerator interface!
+
+    // list = addValue();
+    // AttributeNote node1 = new AttributeNode(name, list);
 }

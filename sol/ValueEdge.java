@@ -7,6 +7,11 @@ import src.ITreeNode;
  */
 public class ValueEdge {
     // TODO: add more fields if needed
+    private String value;
     private ITreeNode child;
+
+    public ValueEdge(String value) {
+        this.value = value;
+    }
 
 }
