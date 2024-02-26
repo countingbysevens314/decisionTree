@@ -59,11 +59,10 @@ public class BasicDatasetTest {
          */
 
         //empty.csv
-        /*
-        List<Row> emptyDataObjects = DecisionTreeCSVParser.parse(this.trainingPathEmpty);
-        List<String> attributeListEmpty = new ArrayList<>(emptyDataObjects.get(0).getAttributes());
-        this.trainingEmpty = new Dataset(attributeListEmpty, emptyDataObjects, AttributeSelection.ASCENDING_ALPHABETICAL);
-         */
+        List<Row> emptyDataObjects = new ArrayList<>();
+        //List<String> attributeListEmpty = new
+        this.trainingEmpty = new Dataset(new ArrayList<>(), new ArrayList<>(), AttributeSelection.ASCENDING_ALPHABETICAL);
+
 //        // builds a TreeGenerator object and generates a tree for "foodType"
         this.testGenerator = new TreeGenerator();
 //        TODO: Uncomment this once you've implemented generateTree
@@ -106,7 +105,7 @@ public class BasicDatasetTest {
     @Test
     public void testDatasetSize() {
         Assert.assertEquals(7, this.fruitAscending.size());
-        //Assert.assertEquals(0, this.trainingEmpty.size());
+        Assert.assertEquals(0, this.trainingEmpty.size());
     }
 
     /**
@@ -124,8 +123,9 @@ public class BasicDatasetTest {
     public void testGetAttributeToSplitOn() {
         Assert.assertEquals("calories", this.fruitAscending.getAttributeToSplitOn());
         Assert.assertEquals("highProtein", this.fruitDescending.getAttributeToSplitOn());
-        // how to test random
-        // Assert.assertEquals("calories", this.fruitRandom.getAttributeToSplitOn());
+        // random case: test if returned attribute is in the list
+        Assert.assertTrue(this.attributeList.contains(this.fruitRandom.getAttributeToSplitOn()));
+
     }
 
 

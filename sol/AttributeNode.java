@@ -13,9 +13,7 @@ import src.Row;
 public class AttributeNode implements ITreeNode {
 
     private String decision;
-
     private String attribute;
-
     private List<ValueEdge> outgoingEdges;
 
     public AttributeNode(String attribute, List<ValueEdge> outgoingEdges) {

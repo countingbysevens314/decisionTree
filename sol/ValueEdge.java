@@ -10,8 +10,9 @@ public class ValueEdge {
     private String value;
     private ITreeNode child;
 
-    public ValueEdge(String value) {
+    public ValueEdge(String value, ITreeNode child) {
         this.value = value;
+        this.child = child;
     }
 
 }
