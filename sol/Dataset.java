@@ -68,6 +68,28 @@ public class Dataset implements IDataset {
         return this.dataObjects.size();
     }
 
+    //helper to remove
+    // TODO: remove() to remove targetAttribute from a Dataset before creating nodes
+    public void remove(String targetAttribute) {
+        for (int i = 0; i < this.attributeList.size(); i++) {
+            if (targetAttribute.equals(this.attributeList.get(i))) {
+                this.attributeList.remove(i);
+                // how to alter attributeList and get it applied to the dataset
+            }
+
+        for (int j = 0; j < this.dataObjects.size(); j++){
+            this.dataObjects.get(i).getAttributes();
+            for (int k = 0; k < this.dataObjects.size(); k++) {
+
+            }
+        }
+            if (targetAttribute.equals(this.dataObjects.get(i).getAttributes())) {
+                this.dataObjects.remove(i);
+            }
+
+        }
+    }
+
     public String getAttributeToSplitOn() {
         switch (this.selectionType) {
             case ASCENDING_ALPHABETICAL -> {

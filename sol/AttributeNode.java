@@ -9,7 +9,6 @@ import src.Row;
 /**
  * A class representing an inner node in the decision tree.
  */
-// TODO: Uncomment this once you've implemented the methods in the ITreeNode interface!
 public class AttributeNode implements ITreeNode {
 
     private String decision;
@@ -19,17 +18,6 @@ public class AttributeNode implements ITreeNode {
     public AttributeNode(String attribute, List<ValueEdge> outgoingEdges) {
         this.attribute = attribute;
         this.outgoingEdges = outgoingEdges;
-    }
-
-    /**
-     * finds the size of the dataset (number of rows)
-     *
-     * @return the number of rows in the dataset
-     */
-    public List<ValueEdge> addValue() {
-        //List<String> attributeList =
-        // doesn't know about the data
-        return null;
     }
 
     @Override

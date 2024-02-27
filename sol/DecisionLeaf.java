@@ -10,6 +10,9 @@ import src.Row;
 public class DecisionLeaf implements ITreeNode {
     String decision;
     // TODO: add fields as needed
+    public DecisionLeaf(String decision) {
+        this.decision = decision;
+    }
 
     // TODO: Implement the ITreeNode interface
     @Override

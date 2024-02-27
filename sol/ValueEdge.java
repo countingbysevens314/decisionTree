@@ -15,4 +15,18 @@ public class ValueEdge {
         this.child = child;
     }
 
+    // two getter methods?
+    /**
+     * getter method to return the value of a valueEdges
+     * @return the string representation of a value
+     */
+    public String getValue() { return this.value; }
+
+    /**
+     * getter method for the child that this ValueEdge holds
+     * @return an ITreeNode child
+     */
+    public ITreeNode getChild() { return this.child;}
+
+
 }

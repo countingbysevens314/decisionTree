@@ -63,10 +63,10 @@ public class BasicDatasetTest {
         //List<String> attributeListEmpty = new
         this.trainingEmpty = new Dataset(new ArrayList<>(), new ArrayList<>(), AttributeSelection.ASCENDING_ALPHABETICAL);
 
-//        // builds a TreeGenerator object and generates a tree for "foodType"
+//       // builds a TreeGenerator object and generates a tree for "foodType"
         this.testGenerator = new TreeGenerator();
-//        TODO: Uncomment this once you've implemented generateTree
-//        this.testGenerator.generateTree(training, this.targetAttribute);
+
+        this.testGenerator.generateTree(training, this.targetAttribute);
     }
 
     /**
