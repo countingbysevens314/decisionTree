@@ -68,6 +68,7 @@ public class Dataset implements IDataset {
         return this.dataObjects.size();
     }
 
+
     //helper to remove
     // TODO: remove() to remove targetAttribute from a Dataset before creating nodes
     public void remove(String targetAttribute) {
@@ -76,19 +77,35 @@ public class Dataset implements IDataset {
                 this.attributeList.remove(i);
                 // how to alter attributeList and get it applied to the dataset
             }
-
+        /* remove dataObjects
         for (int j = 0; j < this.dataObjects.size(); j++){
             this.dataObjects.get(i).getAttributes();
             for (int k = 0; k < this.dataObjects.size(); k++) {
-
             }
         }
             if (targetAttribute.equals(this.dataObjects.get(i).getAttributes())) {
                 this.dataObjects.remove(i);
             }
-
+         */
         }
     }
+
+    public Dataset subset(String targetAttribute) {
+        List<String> copyList = new ArrayList<>(this.attributeList);
+        for (int i = 0; i < this.attributeList.size(); i++) {
+            if (targetAttribute.equals(this.attributeList.get(i))) {
+                copyList.remove(i);
+            }
+        }
+        // returning a copy of the dataset
+        return new Dataset(copyList, this.dataObjects, this.selectionType);
+        // we return the same dataObjects???
+    }
+    
+    // partition to group rows of the same value together; returns a list of rows
+    public List<Row> partition(String value) {
+        // loop through partition to find intended value
+    }; 
 
     public String getAttributeToSplitOn() {
         switch (this.selectionType) {

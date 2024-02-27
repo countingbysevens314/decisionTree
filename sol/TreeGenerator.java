@@ -13,14 +13,20 @@ import java.util.List;
 public class TreeGenerator implements ITreeGenerator<Dataset> {
     // TODO: document this field
     private ITreeNode root;
-    private Dataset dataset;
+    private Dataset mainDataset;
 
     // constructor? without parameter?
 
     @Override
     public void generateTree(Dataset trainingData, String targetAttribute) {
         // monday, changed D to Dataset
-        this.dataset = trainingData;
+        this.mainDataset = trainingData;
+        // remove target attribute
+        Dataset subset = trainingData.subset(targetAttribute); //call remove in subset?
+
+        // build root tree
+        this.buildDecisionTree();
+
         // primeNumbers.remove(3);
         //  remove method: search through list until
 
@@ -28,12 +34,13 @@ public class TreeGenerator implements ITreeGenerator<Dataset> {
     }
 
     public ITreeNode buildDecisionTree(String attribute, Dataset trainingData) {
-
+        //buildDecisionTree(next attribute to split on, smaller subsets);
+        return null;
     }
 
     @Override
     public String getDecision(Row datum) {
-
+        return null;
     }
     // TODO: Implement methods declared in ITreeGenerator interface!
 
