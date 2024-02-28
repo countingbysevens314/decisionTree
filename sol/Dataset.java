@@ -102,10 +102,43 @@ public class Dataset implements IDataset {
         // we return the same dataObjects???
     }
     
-    // partition to group rows of the same value together; returns a list of rows
-    public List<Row> partition(String value) {
-        // loop through partition to find intended value
-    }; 
+    // partition to group rows of the same value together; returns a list of Datasets
+    public List<Dataset> partition(String onAttribute) {
+        // 1. initialize a list of Dataset to be returned
+        // it will contain three Datasets each for e.g. color=green, yellow, orange
+        List<Dataset> subsets = new ArrayList<>();
+
+        // 2. initialize a list of String to filter ValueEdges
+        // stream() helper removes recurrent values and builds a list of only distinct ones
+        List<String> distinctValues = (List<String>) this.attributeList.stream();
+
+        // 3. initialize a list of String for new attributeList excluding the attribute we split on
+        List<String> newAttributeList = new ArrayList<>(this.attributeList);
+        newAttributeList.remove(onAttribute);
+
+        // 4. initialize a list of Row containing only e.g. Rows of color = yellow
+        List<Row> listRow = new ArrayList<>();
+
+        // for every distinct value (e.g. green, yellow...)
+        for (String value: distinctValues) {
+            // for every row in dataObjects
+            for (Row r: this.dataObjects) {
+                // if row's onAttribute = its value = this distinct value we're looking at in this loop
+                // (e.g. row's color = yellow = yellow)
+                if (r.getAttributeValue(onAttribute).equals(value)) {
+                    //add this row to our listRow in step 4
+                    listRow.add(r);
+                }
+            }
+            // after we loop through dataObjects for this distinct value (yellow), create and add
+            // to the list of Dataset we want to return
+            // so that we have one Dataset containing only color=yellow
+            subsets.add(new Dataset(newAttributeList, listRow, this.selectionType));
+            // continue looping through other distinct values (green, orange...) until we don't have anymore
+            // distinct values, that way we've completed dividing Dataset based on attribute=color
+        }
+        return subsets;
+    }
 
     public String getAttributeToSplitOn() {
         switch (this.selectionType) {
