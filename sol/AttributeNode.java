@@ -15,8 +15,9 @@ public class AttributeNode implements ITreeNode {
     private String attribute;
     private List<ValueEdge> outgoingEdges;
 
-    public AttributeNode(String attribute, List<ValueEdge> outgoingEdges) {
+    public AttributeNode(String attribute, String decision, List<ValueEdge> outgoingEdges) {
         this.attribute = attribute;
+        this.decision = decision;
         this.outgoingEdges = outgoingEdges;
     }
 

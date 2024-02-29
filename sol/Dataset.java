@@ -3,6 +3,7 @@ package sol;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Stream;
 
 import src.AttributeSelection;
 import src.IDataset;
@@ -68,40 +69,20 @@ public class Dataset implements IDataset {
         return this.dataObjects.size();
     }
 
-
-    //helper to remove
-    // TODO: remove() to remove targetAttribute from a Dataset before creating nodes
-    public void remove(String targetAttribute) {
-        for (int i = 0; i < this.attributeList.size(); i++) {
-            if (targetAttribute.equals(this.attributeList.get(i))) {
-                this.attributeList.remove(i);
-                // how to alter attributeList and get it applied to the dataset
-            }
-        /* remove dataObjects
-        for (int j = 0; j < this.dataObjects.size(); j++){
-            this.dataObjects.get(i).getAttributes();
-            for (int k = 0; k < this.dataObjects.size(); k++) {
-            }
-        }
-            if (targetAttribute.equals(this.dataObjects.get(i).getAttributes())) {
-                this.dataObjects.remove(i);
-            }
-         */
-        }
-    }
-
-    public Dataset subset(String targetAttribute) {
+    // wed, println test passed
+    public Dataset removeTarget(String targetAttribute) {
         List<String> copyList = new ArrayList<>(this.attributeList);
         for (int i = 0; i < this.attributeList.size(); i++) {
             if (targetAttribute.equals(this.attributeList.get(i))) {
                 copyList.remove(i);
             }
         }
+        System.out.println("attributeList without target" + copyList);
         // returning a copy of the dataset
         return new Dataset(copyList, this.dataObjects, this.selectionType);
         // we return the same dataObjects???
     }
-    
+
     // partition to group rows of the same value together; returns a list of Datasets
     public List<Dataset> partition(String onAttribute) { //say onAttribute=color
         // 1. initialize a list of Dataset to be returned
@@ -109,13 +90,20 @@ public class Dataset implements IDataset {
         List<Dataset> subsets = new ArrayList<>();
 
         // 2. initialize a list of String to filter ValueEdges
-        // stream() helper removes recurrent values and builds a list of only distinct ones
+        // stream().distinct() helper removes recurrent values and builds a list of only distinct ones
         // for onAttribute=color, this list will be "yellow, orange, green"
-        List<String> distinctValues = (List<String>) this.attributeList.stream();
+        List<String> distinctValues = new ArrayList<>();
+        for (Row r : this.dataObjects) {
+            distinctValues.add(r.getAttributeValue(onAttribute));
+        }
+        distinctValues = distinctValues.stream().distinct().toList();
+        System.out.println("distinctValues" + distinctValues);
 
+        // how to use stream()??? or distinct()???
         // 3. initialize a list of String, copying attributeList, and excluding the attribute we split on
         List<String> newAttributeList = new ArrayList<>(this.attributeList);
         newAttributeList.remove(onAttribute);
+        System.out.println("newAttributeList" + newAttributeList);
 
         // 4. initialize a list of Row to contain only e.g. Rows with color = yellow
         List<Row> listRow = new ArrayList<>();
@@ -129,6 +117,7 @@ public class Dataset implements IDataset {
                 if (r.getAttributeValue(onAttribute).equals(value)) {
                     //add this row to our listRow in step 4
                     listRow.add(r);
+                    //System.out.println(r.getAttributeValue(onAttribute));
                 }
             }
             // after we loop through dataObjects for this distinct value (yellow), create and add
@@ -140,6 +129,38 @@ public class Dataset implements IDataset {
         }
         return subsets;
     }
+
+    /**
+     *
+     * @return
+     */
+    public String getDefault(String targetAttribute) {
+        List<Dataset> subsets = this.partition(targetAttribute);
+        int maxSize = subsets.get(0).size();
+        int maxIndex = 0;
+        for (int i = 0; i < subsets.size() - 1; i++) {
+            if (maxSize <= subsets.get(i+1).size()) {
+                maxSize = subsets.get(i+1).size();
+                maxIndex = i+1;
+            }
+        }
+        return subsets.get(maxIndex).getDataObjects().get(0).getAttributeValue(targetAttribute);
+    }
+
+    // returns decision if every row has the same outcome
+    public String getLeafDecision(String targetAttribute) {
+        for (int i = 0; i < this.dataObjects.size() - 1; i++) {
+            if (!this.dataObjects.get(i).getAttributeValue(targetAttribute).equals(this.dataObjects.get(i+1).getAttributeValue(targetAttribute))) {
+               return null;
+                // for each row in dataObjects
+                // for the last element in each row
+                // counter: + 1 for each duplicate attributeValue encountered --
+                // return highest incidence of outcome
+            }
+        }
+        return this.dataObjects.get(0).getAttributeValue(targetAttribute);
+    }
+
 
     public String getAttributeToSplitOn() {
         switch (this.selectionType) {
