@@ -54,7 +54,6 @@ public class TreeGenerator implements ITreeGenerator<Dataset> {
     @Override
     public String getDecision(Row datum) {
         return this.root.getDecision(datum);
-
         /**
          * from buildTree:
          *   String decision = trainingData.getLeafDecision(this.targetAttribute);

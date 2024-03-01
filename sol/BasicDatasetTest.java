@@ -69,8 +69,8 @@ public class BasicDatasetTest {
 
         // builds a TreeGenerator object and generates a tree for "foodType"
         this.testGenerator = new TreeGenerator();
-        //this.testGenerator.generateTree(this.fruitAscending, "foodType");
-        this.testGenerator.generateTree(this.birdAscending, "isBird");
+        this.testGenerator.generateTree(this.fruitAscending, "foodType");
+        //this.testGenerator.generateTree(this.birdAscending, "isBird");
         //this.testGenerator.generateTree(this.fruitDescending, "foodType");
         //this.testGenerator.generateTree(this.fruitRandom, "foodType");
     }
@@ -186,9 +186,15 @@ public class BasicDatasetTest {
         tangerine.setAttributeValue("color", "orange");
         tangerine.setAttributeValue("highProtein", "false");
         tangerine.setAttributeValue("calories", "high");
+
         // TODO: make your own assertions based on the expected classifications
-        // TODO: Uncomment this once you've implemented getDecision
+        Row kiwi = new Row("test row (kiwi)");
+        tangerine.setAttributeValue("color", "green");
+        tangerine.setAttributeValue("highProtein", "true");
+        tangerine.setAttributeValue("calories", "medium");
+
         Assert.assertEquals("fruit", this.testGenerator.getDecision(tangerine));
+        // Assert.assertEquals("fruit", this.testGenerator.getDecision(kiwi));
     }
 
 }

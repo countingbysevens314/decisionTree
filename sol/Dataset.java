@@ -106,11 +106,12 @@ public class Dataset implements IDataset {
         System.out.println("newAttributeList" + newAttributeList);
 
         // 4. initialize a list of Row to contain only e.g. Rows with color = yellow
-        List<Row> listRow = new ArrayList<>();
+        //List<Row> listRow = new ArrayList<>();
 
         // for every distinct value (e.g. green, yellow...)
         for (String value: distinctValues) {
             // for every row in dataObjects
+            List<Row> listRow = new ArrayList<>();
             for (Row r: this.dataObjects) {
                 // if row's onAttribute -> its value = this distinct value we're looking at in this loop
                 // (e.g. row's color -> yellow = yellow)

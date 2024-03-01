@@ -22,7 +22,9 @@ public class DecisionTreeTest {
 
     private Dataset fruit;
 
-    private TreeGenerator testGenerator;
+    private TreeGenerator testGeneratorBird;
+
+    private TreeGenerator testGeneratorFruit;
 
 
     //TODO: Write more unit and system tests! Some basic guidelines that we will be looking for:
@@ -43,8 +45,10 @@ public class DecisionTreeTest {
         List<String> fruitAttributeList = new ArrayList<>(fruitDataObjects.get(0).getAttributes());
         this.fruit = new Dataset(fruitAttributeList, fruitDataObjects, AttributeSelection.ASCENDING_ALPHABETICAL);
 
-        this.testGenerator = new TreeGenerator();
-        this.testGenerator.generateTree(this.bird, "isBird");
+        this.testGeneratorFruit = new TreeGenerator();
+        this.testGeneratorBird = new TreeGenerator();
+        this.testGeneratorBird.generateTree(this.bird, "isBird");
+        this.testGeneratorFruit.generateTree(this.fruit, "foodType");
     }
 
 
@@ -55,11 +59,12 @@ public class DecisionTreeTest {
         //this.bird.removeTarget("isBird");
         List<Dataset> birdPartitionResult = this.bird.removeTarget("isBird").partition("canFly");
 
-        List<ValueEdge> birdValue = this.testGenerator.addValue("canFly", birdPartitionResult);
+        List<ValueEdge> birdValue = this.testGeneratorBird.addValue("canFly", birdPartitionResult);
         for (ValueEdge ve : birdValue) {
             System.out.print(ve.getValue());
             System.out.print(", ");
         }
+        System.out.println("finished printing valueedge");
 
         //  this.testGenerator.addValue("color", fruitVegPartitionHighProtein);
         // for (ValueEdge ve: birdValue)
@@ -70,6 +75,28 @@ public class DecisionTreeTest {
         List<Dataset> fruitVegPartitionCalories = this.fruit.partition("calories");
 
 
+
+    }
+
+    @Test
+    public void testGetDecision() {
+        List<Row> fruitVegDataObjects = DecisionTreeCSVParser.parse("data/fruits-and-vegetables.csv");
+        Row testRow = fruitVegDataObjects.get(0);
+        String prediction = this.testGeneratorFruit.getDecision(testRow); // make counters for correct and incorrect
+        assertEquals(testRow.getAttributeValue("foodType"), prediction);
+
+        //if (prediction.equals(datum.getAttributeValue(targetAttribute)))
+        /**
+         * public double getAverageDecisionTreeAccuracy(String trainingDataPath, String testingDataPath,
+         *                                                  String targetAttribute, int numIterations)
+         */
+        // getAttributeValue
+        // "feed" the row to the tree XXXXX
+        // if the decision is the same as is anticipated for the row, increase the correct counter
+        // otherwise increase the incorrect counter
+
+        // Now have the counts for correct and incorrect.
+        // "Success" means that these are in a desired range: ~70% for test data, 95% training
     }
 
 
