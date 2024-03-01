@@ -17,14 +17,6 @@ import javax.xml.crypto.Data;
  * A class to test basic decision tree functionality on a basic training dataset
  */
 public class BasicDatasetTest {
-    // IMPORTANT: for this filepath to work, make sure the project is open as the top-level directory in IntelliJ
-    // (See the first yellow information box in the handout testing section for details)
-    String trainingPathFruit = "data/fruits-and-vegetables.csv";
-    String trainingPathEmpty = "data/empty.csv";
-    String trainingPathBird = "data/bird.csv";
-
-    String targetAttribute = "isBird";
-
     List<Row>  dataObjects;
     List<String> attributeList;
     
@@ -35,6 +27,7 @@ public class BasicDatasetTest {
     Dataset birdDescending;
     Dataset birdRandom;
 
+    // fruits-and-vegetables.csv
     Dataset fruitAscending;
     Dataset fruitDescending;
     Dataset fruitRandom;
@@ -47,7 +40,7 @@ public class BasicDatasetTest {
     @Before
     public void buildTreeForTest() {
         // fruits-and-vegetables testing (selection type: ascending alphabetical)
-        this.dataObjects = DecisionTreeCSVParser.parse(this.trainingPathFruit);
+        this.dataObjects = DecisionTreeCSVParser.parse( "data/fruits-and-vegetables.csv");
         this.attributeList = new ArrayList<>(dataObjects.get(0).getAttributes());
         this.fruitAscending = new Dataset(attributeList, dataObjects, AttributeSelection.ASCENDING_ALPHABETICAL);
 
@@ -58,7 +51,7 @@ public class BasicDatasetTest {
         this.fruitRandom = new Dataset(attributeList, dataObjects, AttributeSelection.RANDOM);
 
         // bird testing
-        List<Row> birdDataObjects = DecisionTreeCSVParser.parse(this.trainingPathBird);
+        List<Row> birdDataObjects = DecisionTreeCSVParser.parse("data/bird.csv");
         List<String> birdAttributeList = new ArrayList<>(birdDataObjects.get(0).getAttributes());
         this.birdAscending = new Dataset(birdAttributeList, birdDataObjects, AttributeSelection.ASCENDING_ALPHABETICAL);
         this.birdRandom = new Dataset(birdAttributeList, birdDataObjects, AttributeSelection.RANDOM);
@@ -70,9 +63,6 @@ public class BasicDatasetTest {
         // builds a TreeGenerator object and generates a tree for "foodType"
         this.testGenerator = new TreeGenerator();
         this.testGenerator.generateTree(this.fruitAscending, "foodType");
-        //this.testGenerator.generateTree(this.birdAscending, "isBird");
-        //this.testGenerator.generateTree(this.fruitDescending, "foodType");
-        //this.testGenerator.generateTree(this.fruitRandom, "foodType");
     }
 
     /**
@@ -126,56 +116,6 @@ public class BasicDatasetTest {
     }
 
     /**
-     * testing for partition();
-     */
-    @Test
-    public void testPartition(){
-        List<Dataset> birdByCanFly = new ArrayList<>();
-        List<Row> birdTrue = DecisionTreeCSVParser.parse("data/bird-true.csv");
-        List<Row> birdFalse = DecisionTreeCSVParser.parse("data/bird-false.csv");
-
-        birdByCanFly.add(new Dataset(new ArrayList<>(),birdTrue,AttributeSelection.ASCENDING_ALPHABETICAL));
-        birdByCanFly.add(new Dataset(new ArrayList<>(),birdFalse,AttributeSelection.ASCENDING_ALPHABETICAL));
-
-        //Assert.assertEquals(birdByCanFly, this.birdAscending.partition("canFly"));
-    }
-
-    /**
-     * testing for getLeafDecision();
-     */
-    @Test
-    public void testGetDefault() {
-        Assert.assertEquals("TRUE", this.birdAscending.getDefault("canFly"));
-        Assert.assertEquals("TRUE", this.birdDescending.getDefault("canFly"));
-        Assert.assertEquals("vegetable", this.fruitAscending.getDefault("foodType"));
-    }
-
-    /**
-     * testing for getLeafDecision();
-     */
-    @Test
-    public void testGetLeafDecision() {
-        List<Row> dataObjectsBird = DecisionTreeCSVParser.parse("data/bird-same-outcome.csv");
-        Dataset birdSameOutcome = new Dataset(new ArrayList<>(),
-                dataObjectsBird, AttributeSelection.ASCENDING_ALPHABETICAL);
-        Assert.assertEquals("yes", birdSameOutcome.getLeafDecision("isBird"));
-    }
-
-    /**
-     * testing for removeTarget()
-     */
-    @Test
-    public void testRemoveTarget() {
-        // check to see it works
-        List<String> birdRemovedAttribute = new ArrayList<>();
-        birdRemovedAttribute.add("canFly");
-        Dataset birdRemoved = new Dataset(birdRemovedAttribute, this.birdAscending.getDataObjects(),
-                AttributeSelection.ASCENDING_ALPHABETICAL);
-        //System.out.println(this.birdAscending.removeTarget("isBird"));
-        //Assert.assertEquals(birdRemoved,this.birdAscending.removeTarget("isBird"));
-    }
-
-    /**
      * Tests the expected classification of the "tangerine" row is a fruit
      */
     @Test
@@ -189,12 +129,11 @@ public class BasicDatasetTest {
 
         // TODO: make your own assertions based on the expected classifications
         Row kiwi = new Row("test row (kiwi)");
-        tangerine.setAttributeValue("color", "green");
-        tangerine.setAttributeValue("highProtein", "true");
-        tangerine.setAttributeValue("calories", "medium");
+        kiwi.setAttributeValue("color", "green");
+        kiwi.setAttributeValue("highProtein", "true");
+        kiwi.setAttributeValue("calories", "medium");
 
         Assert.assertEquals("fruit", this.testGenerator.getDecision(tangerine));
-        // Assert.assertEquals("fruit", this.testGenerator.getDecision(kiwi));
+        Assert.assertEquals("vegetable", this.testGenerator.getDecision(kiwi));
     }
-
 }

@@ -17,8 +17,10 @@ public class Dataset implements IDataset {
     private List<String> attributeList;
     private List<Row> dataObjects;
     private AttributeSelection selectionType;
+
     /**
      * Constructor for a Dataset object
+     *
      * @param attributeList - a list of attributes
      * @param dataObjects -  a list of rows
      * @param attributeSelection - an enum for which way to select attributes
@@ -69,7 +71,12 @@ public class Dataset implements IDataset {
         return this.dataObjects.size();
     }
 
-    // wed, println test passed
+    /**
+     * removes the targetAttribute from the original dataset
+     *
+     * @param targetAttribute, the attribute for which we would like return an outcome
+     * @return a Dataset excluding the targetAttribute in its attributeList
+     */
     public Dataset removeTarget(String targetAttribute) {
         List<String> copyList = new ArrayList<>(this.attributeList);
         for (int i = 0; i < this.attributeList.size(); i++) {
@@ -77,53 +84,48 @@ public class Dataset implements IDataset {
                 copyList.remove(i);
             }
         }
-        System.out.println("attributeList without target" + copyList);
         // returning a copy of the dataset
         return new Dataset(copyList, this.dataObjects, this.selectionType);
-        // we return the same dataObjects???
     }
 
+    /**
+     * groups rows of the same value together
+     *
+     * @param onAttribute — the attribute that we're currently splitting on
+     * @return a list of Dataset, representing the partitioned datasets
+     */
     // partition to group rows of the same value together; returns a list of Datasets
-    public List<Dataset> partition(String onAttribute) { //say onAttribute=color
+    public List<Dataset> partition(String onAttribute) {
         // 1. initialize a list of Dataset to be returned
         // it will contain three Datasets each for e.g. color=green, yellow, orange
         List<Dataset> subsets = new ArrayList<>();
 
         // 2. initialize a list of String to filter ValueEdges
         // stream().distinct() helper removes recurrent values and builds a list of only distinct ones
-        // for onAttribute=color, this list will be "yellow, orange, green"
         List<String> distinctValues = new ArrayList<>();
         for (Row r : this.dataObjects) {
             distinctValues.add(r.getAttributeValue(onAttribute));
         }
         distinctValues = distinctValues.stream().distinct().toList();
-        System.out.println("distinctValues" + distinctValues);
 
-        // how to use stream()??? or distinct()???
         // 3. initialize a list of String, copying attributeList, and excluding the attribute we split on
         List<String> newAttributeList = new ArrayList<>(this.attributeList);
         newAttributeList.remove(onAttribute);
-        System.out.println("newAttributeList" + newAttributeList);
-
-        // 4. initialize a list of Row to contain only e.g. Rows with color = yellow
-        //List<Row> listRow = new ArrayList<>();
 
         // for every distinct value (e.g. green, yellow...)
         for (String value: distinctValues) {
-            // for every row in dataObjects
+            // 4. initialize a list of Row to contain only e.g. Rows with color = yellow
             List<Row> listRow = new ArrayList<>();
+            // for every row in dataObjects
             for (Row r: this.dataObjects) {
                 // if row's onAttribute -> its value = this distinct value we're looking at in this loop
-                // (e.g. row's color -> yellow = yellow)
                 if (r.getAttributeValue(onAttribute).equals(value)) {
-                    //add this row to our listRow in step 4
+                    // add this row to our listRow in step 4
                     listRow.add(r);
-                    //System.out.println(r.getAttributeValue(onAttribute));
                 }
             }
             // after we loop through dataObjects for this distinct value (yellow), create and add
             // to the list of Dataset we want to return
-            // so that we have one Dataset with color=yellow
             subsets.add(new Dataset(newAttributeList, listRow, this.selectionType));
             // continue looping through other distinct values (green, orange...) until we don't have anymore
             // distinct values, that way we've completed dividing Dataset based on attribute=color
@@ -132,8 +134,10 @@ public class Dataset implements IDataset {
     }
 
     /**
+     * computes the default decision based on the targetAttribute
      *
-     * @return
+     * @param targetAttribute, the attribute for which we would like return an outcome
+     * @return a String representing the default value for a given attributeNode
      */
     public String getDefault(String targetAttribute) {
         List<Dataset> subsets = this.partition(targetAttribute);
@@ -148,24 +152,31 @@ public class Dataset implements IDataset {
         return subsets.get(maxIndex).getDataObjects().get(0).getAttributeValue(targetAttribute);
     }
 
-    // returns decision if every row has the same outcome
+    /**
+     * returns the decision for a decisionLeaf if every row has the same outcome
+     *
+     * @param targetAttribute, the attribute for which we would like return an outcome
+     * @return the highest incidence of outcome
+     */
     public String getLeafDecision(String targetAttribute) {
         for (int i = 0; i < this.dataObjects.size() - 1; i++) {
-            if (!this.dataObjects.get(i).getAttributeValue(targetAttribute).equals(this.dataObjects.get(i+1).getAttributeValue(targetAttribute))) {
+            if (!this.dataObjects.get(i).getAttributeValue(targetAttribute).
+                    equals(this.dataObjects.get(i+1).getAttributeValue(targetAttribute))) {
                return null;
-                // for each row in dataObjects
-                // for the last element in each row
-                // counter: + 1 for each duplicate attributeValue encountered --
-                // return highest incidence of outcome
             }
         }
         return this.dataObjects.get(0).getAttributeValue(targetAttribute);
     }
 
+    /**
+     * gets an attribute to split the data on, either by ascending alphabetical order, descending alphabetical order,
+     * or a random order
+     *
+     * @return a String representing the attribute to be split on
+     */
     public String getAttributeToSplitOn() {
         switch (this.selectionType) {
             case ASCENDING_ALPHABETICAL -> {
-                //deleted AttributeSelection. from starting code
                 return this.attributeList.stream().sorted().toList().get(0);
             }
             case DESCENDING_ALPHABETICAL -> {
@@ -174,13 +185,12 @@ public class Dataset implements IDataset {
             case RANDOM -> {
                 Random random = new Random();
                 int upperBound = this.attributeList.size();
-                /**
-                 * list size = 10 ; max index 9; upperBound = 10
+                /*
+                 * e.g. list size = 10 ; max index 9; upperBound = 10
                  * generates a random number between 0 (inclusive) and 10 (exclusive);
                  * the upper bound must be greater than 0
                  */
                 int randomNum = random.nextInt(upperBound);
-                System.out.println(randomNum);
                 return this.attributeList.stream().sorted().toList().get(randomNum);
             }
         }     throw new RuntimeException("Non-Exhaustive Switch Case");

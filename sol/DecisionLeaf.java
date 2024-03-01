@@ -6,15 +6,25 @@ import src.Row;
 /**
  * A class representing a leaf in the decision tree.
  */
-// TODO: Uncomment this once you've implemented the methods in the ITreeNode interface!
+
 public class DecisionLeaf implements ITreeNode {
     String decision;
-    // TODO: add fields as needed
+
+    /**
+     * a decisionLeaf object
+     *
+     * @param decision — the decision returned by a decisionLeaf
+     */
     public DecisionLeaf(String decision) {
         this.decision = decision;
     }
 
-    // TODO: Implement the ITreeNode interface
+    /**
+     * gets the decision associated with a row
+     *
+     * @param forDatum the datum to lookup a decision for
+     * @return the decision for the dataum
+     */
     @Override
     public String getDecision(Row forDatum) {
         return this.decision;
