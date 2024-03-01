@@ -146,13 +146,15 @@ public class BasicDatasetTest {
     @Test
     public void testGetDefault() {
         Assert.assertEquals("TRUE", this.birdAscending.getDefault("canFly"));
+        Assert.assertEquals("TRUE", this.birdDescending.getDefault("canFly"));
+        Assert.assertEquals("vegetable", this.fruitAscending.getDefault("foodType"));
     }
 
     /**
      * testing for getLeafDecision();
      */
     @Test
-    public void testGetLeafDecision(){
+    public void testGetLeafDecision() {
         List<Row> dataObjectsBird = DecisionTreeCSVParser.parse("data/bird-same-outcome.csv");
         Dataset birdSameOutcome = new Dataset(new ArrayList<>(),
                 dataObjectsBird, AttributeSelection.ASCENDING_ALPHABETICAL);

@@ -1,5 +1,6 @@
 package sol;
 
+import src.AttributeSelection;
 import src.ITreeGenerator;
 import src.ITreeNode;
 import src.Row;
@@ -14,21 +15,19 @@ import java.util.List;
 public class TreeGenerator implements ITreeGenerator<Dataset> {
     // TODO: document this field
     private ITreeNode root;
-
     private Dataset targetRemoved;
-
     private String targetAttribute;
-
-    // constructor? without parameter?
 
     @Override
     public void generateTree(Dataset trainingData, String targetAttribute) {
+        if (trainingData.size() == 0) {
+            throw new RuntimeException("can't build tree on an empty dataset");
+        }
         this.targetAttribute = targetAttribute;
         // monday, changed D to Dataset
-        //this.mainDataset = trainingData;
         // remove target attribute
         this.targetRemoved = trainingData.removeTarget(targetAttribute); //call remove in subset?
-        // build root tree, how to initialize root
+        // wed, initialize root by TA suggestion
         this.root = this.buildTree(this.targetRemoved);
     }
 
@@ -46,7 +45,6 @@ public class TreeGenerator implements ITreeGenerator<Dataset> {
             for (Dataset subset: subsets) {
                 buildTree(subset);
             } */
-
             // compute default for attributeNode using getDefault()
             return new AttributeNode(onAttribute, defaultDecision, addValue(onAttribute, subsets));
         }
@@ -56,8 +54,19 @@ public class TreeGenerator implements ITreeGenerator<Dataset> {
 
     @Override
     public String getDecision(Row datum) {
-        // Call get decision on the root (first attribute value that we split on)
+        this.root.getDecision(datum);
+
+        // check if leaf or node?
+        // if node
+
+        // if leaf
         return this.root.getDecision(datum);
+
+       //  //if (ValueEdge.getValue(Decision(datum)V ){
+
+        //}
+        // Call get decision on the root (first attribute value that we split on)
+        //return this.root.getDecision(datum);
         /**
          * from buildTree:
          *   String decision = trainingData.getLeafDecision(this.targetAttribute);
@@ -66,6 +75,7 @@ public class TreeGenerator implements ITreeGenerator<Dataset> {
          *         }
          *         return null;
          */
+        return null;
     }
 
     /**

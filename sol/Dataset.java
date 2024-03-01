@@ -161,7 +161,6 @@ public class Dataset implements IDataset {
         return this.dataObjects.get(0).getAttributeValue(targetAttribute);
     }
 
-
     public String getAttributeToSplitOn() {
         switch (this.selectionType) {
             case ASCENDING_ALPHABETICAL -> {

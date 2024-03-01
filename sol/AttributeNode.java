@@ -23,7 +23,11 @@ public class AttributeNode implements ITreeNode {
 
     @Override
     public String getDecision(Row forDatum) {
-        // to be implemented
+        for (ValueEdge edge: this.outgoingEdges) {
+            if (edge.getValue().equals(forDatum.getAttributeValue(this.attribute))) {
+                return edge.getChild().getDecision(forDatum);
+            }
+        }
         return this.decision;
     }
 }
