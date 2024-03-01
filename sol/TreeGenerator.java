@@ -45,8 +45,7 @@ public class TreeGenerator implements ITreeGenerator<Dataset> {
             for (Dataset subset: subsets) {
                 buildTree(subset);
             } */
-            // compute default for attributeNode using getDefault()
-            return new AttributeNode(onAttribute, defaultDecision, addValue(onAttribute, subsets));
+            return new AttributeNode(onAttribute, defaultDecision, this.addValue(onAttribute, subsets));
         }
 
         // case where neither attributeNode nor decisionLeaf is created
@@ -54,19 +53,8 @@ public class TreeGenerator implements ITreeGenerator<Dataset> {
 
     @Override
     public String getDecision(Row datum) {
-        this.root.getDecision(datum);
-
-        // check if leaf or node?
-        // if node
-
-        // if leaf
         return this.root.getDecision(datum);
 
-       //  //if (ValueEdge.getValue(Decision(datum)V ){
-
-        //}
-        // Call get decision on the root (first attribute value that we split on)
-        //return this.root.getDecision(datum);
         /**
          * from buildTree:
          *   String decision = trainingData.getLeafDecision(this.targetAttribute);
@@ -75,7 +63,6 @@ public class TreeGenerator implements ITreeGenerator<Dataset> {
          *         }
          *         return null;
          */
-        return null;
     }
 
     /**
@@ -87,7 +74,7 @@ public class TreeGenerator implements ITreeGenerator<Dataset> {
         List<ValueEdge> edgeList = new ArrayList<>();
         for (Dataset subset : subsets){
             String value = subset.getDataObjects().get(0).getAttributeValue(onAttribute);
-            edgeList.add(new ValueEdge(value, buildTree(subset)));
+            edgeList.add(new ValueEdge(value, this.buildTree(subset)));
         }
         return edgeList;
     }
